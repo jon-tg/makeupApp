@@ -1,0 +1,30 @@
+h2
+{
+    margin:.3vh;
+}
+#search
+{
+    text-align: center;
+    
+}
+#container
+{
+    display:flex;
+    flex-wrap: wrap;
+    padding:1vw;
+    justify-content:center;
+}
+#holder
+{
+    display:flex;
+    flex-direction: column;
+    text-align: center;
+
+}
+
+#product-container
+{
+    text-align: center;
+    display:flex;
+    flex-direction:column;
+}
