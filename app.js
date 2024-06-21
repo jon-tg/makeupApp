@@ -9,26 +9,27 @@ async function productData() {
         let product_type = document.getElementById('product_type').value;
         let brand=document.getElementById('brand').value;
         let filters=[];
-        filters.push(product_type, brand);
+        if (product_type=="")
+            filters.push(brand);
+        else if (brand=="")
+            filters.push(product_type);
+
         let filters_string=filters.join(',');
 
         let url=`https://sephora.p.rapidapi.com/us/products/v2/search?q=${filters_string}&pageSize=60&currentPage=1`;
         let options={
             method: 'GET',
 	        headers: {
-		'X-RapidAPI-Key': 'b826344945msh42df2aaca0f0af7p174a20jsna8ff390fb6ef',
-		'X-RapidAPI-Host': 'sephora.p.rapidapi.com'
-            
-	},
-        
+                'x-rapidapi-key': 'b826344945msh42df2aaca0f0af7p174a20jsna8ff390fb6ef',
+                'x-rapidapi-host': 'sephora.p.rapidapi.com'
+	}   
 };
         try {
 
         let response= await fetch(url, options);
         let data= await response.json();
+        console.log(response, data);
         let products=await data.products;
-        console.log(products);
-        console.log(productData);
 
         try
         {
@@ -37,6 +38,9 @@ async function productData() {
             for (let i=0; i<products.length; i++)
                 {
                     let product=document.createElement('img');
+                    product.id='product';
+                    product.style.maxWidth='300px';
+                    product.style.maxHeight='300px';
                     let product_container=document.createElement('div');
                     product_container.id='product-container';
                     let productName=document.createElement('h4');
@@ -46,7 +50,6 @@ async function productData() {
                     let productId=products[i].productId;
                     let productSKU=products[i].currentSku.skuId;
                     container.appendChild(product_container);
-                    product.style.maxWidth='300px';
                     product.src=products[i].heroImage;
                     product_container.appendChild(product);
                     product_container.appendChild(productName);
@@ -61,8 +64,9 @@ async function productData() {
                 }
         }
 
-        catch
+        catch(e)
         {
+            console.log(e);
             let error=document.createElement('h3');
             error.style.textAlign='center';
             error.textContent='No matching products';
@@ -96,36 +100,42 @@ try {
     let wholeContainer=document.createElement('div');
     let detailContainer=document.createElement('div');
     let productData=document.createElement('p');
+    let description=data.productDetails.longDescription + "<br><br>" + data.productDetails.suggestedUsage + "</br></br>";
+    let productTitle=document.createElement('h3');
+    let descHeader=document.createElement('h3');
+    
     document.body.appendChild(wholeContainer);
     wholeContainer.appendChild(detailContainer);
-    let description=data.productDetails.longDescription + "<br><br>" + data.productDetails.suggestedUsage + "</br></br>";
-    let productTitle=document.createElement('p');
-    let descHeader=document.createElement('h3');
+
     descHeader.textContent="Product Description";
+    descHeader.style.textAlign='center';
     productData.innerHTML=description;
-    wholeContainer.style.width='80%';
-    detailContainer.style.width='60%';
-    detailContainer.style.textAlign='right';
-    wholeContainer.style.position='relative';
-    wholeContainer.style.marginLeft='20%';
-    detailContainer.style.position='relative';
-    detailContainer.style.textAlign='left';
-    detailContainer.style.marginLeft='25%';
+    document.body.appendChild(productTitle);
+    document.body.appendChild(descHeader);
+    product.style.maxWidth='300px';
+    wholeContainer.style.display='flex';
+    wholeContainer.style.justifyContent='center';
+    detailContainer.style.width='35%';
+    productTitle.style.marginTop='2vh';
+    productTitle.style.marginBottom='0';
+    descHeader.style.marginTop='5px';
+    wholeContainer.style.positon='relative';
+    wholeContainer.style.top='5vh';
+    wholeContainer.style.marginLeft='auto';
+    wholeContainer.style.marginRight='auto';
+    wholeContainer.style.height='auto';
+    wholeContainer.style.flexBasis='300px';
     productData.style.margin=0;
     productData.style.padding=0;
     productTitle.textContent=data.content.seoTitle;
-    descHeader.style.textAlign='center';
-    descHeader.style.position='relative';
-    document.body.appendChild(descHeader);
+    productTitle.style.textAlign='center';
+    product.style.alignSelf='center';
     document.body.appendChild(wholeContainer);
-    detailContainer.appendChild(productTitle);
     detailContainer.appendChild(productData);
     wholeContainer.appendChild(product);
-    wholeContainer.style.height=detailContainer.style.height;
-    descHeader.style.top='5vh';
-    wholeContainer.style.top='5vh';
-    product.style.position='absolute';
-    product.style.top='15%';
+
+
+
     
 
 } catch (error) {
