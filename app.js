@@ -108,7 +108,7 @@ try {
     detailContainer.style.textAlign='right';
     wholeContainer.style.position='relative';
     wholeContainer.style.marginLeft='20%';
-    detailContainer.style.position='absolute';
+    detailContainer.style.position='relative';
     detailContainer.style.textAlign='left';
     detailContainer.style.marginLeft='25%';
     productData.style.margin=0;
@@ -121,8 +121,11 @@ try {
     detailContainer.appendChild(productTitle);
     detailContainer.appendChild(productData);
     wholeContainer.appendChild(product);
-     descHeader.style.top='5vh';
+    wholeContainer.style.height=detailContainer.style.height;
+    descHeader.style.top='5vh';
     wholeContainer.style.top='5vh';
+    product.style.position='absolute';
+    product.style.top='15%';
     
 
 } catch (error) {
