@@ -8,12 +8,7 @@ async function productData() {
         let container=document.getElementById('container');
         let product_type = document.getElementById('product_type').value;
         let brand=document.getElementById('brand').value;
-        let filters=[];
-        if (product_type=="")
-            filters.push(brand);
-        else if (brand=="")
-            filters.push(product_type);
-
+        let filters=[product_type, brand];
         let filters_string=filters.join(',');
 
         let url=`https://sephora.p.rapidapi.com/us/products/v2/search?q=${filters_string}&pageSize=60&currentPage=1`;
@@ -32,8 +27,7 @@ async function productData() {
         let products=await data.products;
 
         try
-        {
-            
+        {            
        
             for (let i=0; i<products.length; i++)
                 {
@@ -98,9 +92,35 @@ try {
 	console.log(data);
 
     let wholeContainer=document.createElement('div');
+    wholeContainer.id='wholeContainer';
     let detailContainer=document.createElement('div');
     let productData=document.createElement('p');
-    let description=data.productDetails.longDescription + "<br><br>" + data.productDetails.suggestedUsage + "</br></br>";
+    let productDetails=data.productDetails.longDescription;
+    
+
+
+    let productString=productDetails.split("<p>");
+    let detailsFormatted = productString.join(" ");
+
+
+  
+    let detailLines=detailsFormatted.split("<br>");
+    let productDesc="";
+
+
+    for (let line of detailLines)
+    {
+        let lineString=line;
+
+        lineString+="<br>"; 
+
+        productDesc+=lineString;
+
+    }
+
+    let description=productDesc + "<br>" + data.productDetails.suggestedUsage + "</br>";
+
+
     let productTitle=document.createElement('h3');
     let descHeader=document.createElement('h3');
     
@@ -112,10 +132,10 @@ try {
     productData.innerHTML=description;
     document.body.appendChild(productTitle);
     document.body.appendChild(descHeader);
-    product.style.maxWidth='300px';
+    product.style.maxWidth='500px';
     wholeContainer.style.display='flex';
     wholeContainer.style.justifyContent='center';
-    detailContainer.style.width='35%';
+    detailContainer.style.width='25%';
     productTitle.style.marginTop='2vh';
     productTitle.style.marginBottom='0';
     descHeader.style.marginTop='5px';
@@ -133,10 +153,6 @@ try {
     document.body.appendChild(wholeContainer);
     detailContainer.appendChild(productData);
     wholeContainer.appendChild(product);
-
-
-
-    
 
 } catch (error) {
 	console.error(error);
